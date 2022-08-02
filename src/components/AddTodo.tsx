@@ -1,27 +1,39 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Button, TextInput, Group } from '@mantine/core'
+import { useForm } from '@mantine/form'
 
 interface Props {
   addTodo: (arg: any) => any
 }
 
 export const AddTodo: React.FC<Props> = ({ addTodo }) => {
-  const [text, setText] = useState<string>('')
+  const form = useForm({
+    initialValues: {
+      text: '',
+    },
+    validate: {
+      text: (value: string) => value.trim() ? null : 'Please Enter Your Todos!!',
+    },
+  })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!text.trim()) return;
-
+  const handleSubmit = (values: { text: string }) => {
     addTodo({
-      variables: { text }
+      variables: { text: values.text }
     })
 
-    setText('')
+    form.reset()
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input value={text} onChange={e => setText(e.target.value)} />
-      <button type="submit">Add Todo</button>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <TextInput
+        required
+        label="Enter Todo"
+        {...form.getInputProps('text')}
+      />
+      <Group position="right" mt="md">
+        <Button type="submit">Submit</Button>
+      </Group>
     </form>
   )
 }

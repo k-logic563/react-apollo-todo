@@ -1,4 +1,5 @@
 import { gql, useQuery, useMutation } from '@apollo/client'
+import { Center, Space } from '@mantine/core'
 
 import { AddTodo } from './components/AddTodo'
 import { TodoList } from './components/TodoList'
@@ -40,10 +41,14 @@ export const App = () => {
   })
 
   return (
-    <>
-      <AddTodo addTodo={addTodo} />
-      <TodoList { ...{ loading, data }} />
-      <TodoFilter toggleCompleted={toggleCompleted} />
-    </>
+    <Center style={{ width: '100%', padding: '2rem 0' }}>
+      <div>
+        <AddTodo addTodo={addTodo} />
+        <Space h="xl" />
+        <TodoList { ...{ loading, data }} />
+        <Space h="xl" />
+        <TodoFilter toggleCompleted={toggleCompleted} />
+      </div>
+    </Center>
   )
 }

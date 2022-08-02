@@ -1,4 +1,5 @@
 import React from 'react'
+import { Group, Button } from '@mantine/core'
 
 import { FILTER } from '../types'
 
@@ -10,16 +11,16 @@ export const TodoFilter: React.FC<Props> = ({
   toggleCompleted
 }) => {
   return (
-    <>
-      <button onClick={() => toggleCompleted({ variables: { filter: FILTER.SHOW_ALL }})}>
+    <Button.Group>
+      <Button onClick={() => toggleCompleted({ variables: { filter: FILTER.SHOW_ALL }})}>
         ALL
-      </button>
-      <button onClick={() => toggleCompleted({ variables: { filter: FILTER.SHOW_ACTIVE }})}>
+      </Button>
+      <Button onClick={() => toggleCompleted({ variables: { filter: FILTER.SHOW_ACTIVE }})}>
         Active
-      </button>
-      <button onClick={() => toggleCompleted({ variables: { filter: FILTER.SHOW_COMPLETED }})}>
+      </Button>
+      <Button onClick={() => toggleCompleted({ variables: { filter: FILTER.SHOW_COMPLETED }})}>
         Completed
-      </button>
-    </>
+      </Button>
+    </Button.Group>
   )
 }

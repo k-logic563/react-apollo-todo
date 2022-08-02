@@ -21,6 +21,7 @@ const typeDefs = gql`
   }
   type Mutation {
     addTodo(text: String!): Todo!
+    deleteTodo(id: ID!): Todo!
     toggleCompleted(id: ID!): Todo!
     setFilter(filter: FILTER!): FILTER!
   }
@@ -40,6 +41,13 @@ const resolvers = {
       const todo = { ...args, id: Math.random().toString(32).substring(2), completed: false }
       todos = [...todos, todo]
       return todo
+    },
+    deleteTodo: (_: unknown, args: { id: string }) => {
+      const newTodo = todos.filter(todo => todo.id !== args.id)
+      todos = newTodo
+      return {
+        id: args.id
+      }
     },
     toggleCompleted: (_: unknown, args: { id: string }) => {
       const targetTodo = todos.find(todo => todo.id === args.id)

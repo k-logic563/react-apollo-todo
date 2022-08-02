@@ -1,4 +1,5 @@
 import React from 'react'
+import { Checkbox, Stack, Box, Button } from '@mantine/core'
 import { useApolloClient, gql } from '@apollo/client'
 
 import { ALL_TODOS } from '../App'
@@ -10,6 +11,14 @@ type Props = {
     allTodos: Todo[]
   }
 }
+
+const DELETE_TODO = gql`
+  mutation deleteTodo($id: ID!) {
+    deleteTodo(id: $id) {
+      id
+    }
+  }
+`
 
 const TOGGLE_COMPLETED = gql`
   mutation toggleCompleted($id: ID!) {
@@ -33,20 +42,31 @@ export const TodoList: React.FC<Props> = ({
       refetchQueries: [{ query: ALL_TODOS }]
     })
   }
+  const deleteTodo = (id: string) => {
+    client.mutate({
+      mutation: DELETE_TODO,
+      variables: { id },
+      refetchQueries: [{ query: ALL_TODOS }]
+    })
+  }
 
   if (loading) return <p>Now Loading...</p>
 
   return (
-    <ul>
-      { data && data.allTodos.map(t => (
-        <li
-          key={t.id}
-          style={{ textDecoration: t.completed ? 'line-through' : 'none' }}
-          onClick={() => toggleCompleted(t.id)}
-        >
-          {t.text}
-        </li>
+    <Stack spacing="sm">
+      { data && data.allTodos.map(todo => (
+        <Box key={todo.id} sx={() => ({
+          display: 'flex',
+          justifyContent: 'space-between'
+        })}>
+          <Checkbox
+            checked={todo.completed}
+            label={todo.text}
+            onChange={() => toggleCompleted(todo.id)}
+          />
+          <Button color="red" disabled={!todo.completed} onClick={() => deleteTodo(todo.id)} compact>delete</Button>
+        </Box>
       ))}
-    </ul>
+    </Stack>
   )
 }
